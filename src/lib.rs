@@ -9,6 +9,7 @@
 //! qualified professional (CPA/EA) before making filing decisions.
 
 pub mod config;
+pub mod daterange;
 pub mod dedupe;
 pub mod error;
 pub mod importer;
@@ -16,5 +17,6 @@ pub mod ledger;
 pub mod money;
 pub mod overrides;
 pub mod profiles;
+pub mod report;
 pub mod rules;
 pub mod transaction;

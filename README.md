@@ -1,9 +1,15 @@
 # ledgerlite
 
+[![CI](https://github.com/Ricky1800/ledgerlite/actions/workflows/ci.yml/badge.svg)](https://github.com/Ricky1800/ledgerlite/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/tag/Ricky1800/ledgerlite?label=release)](https://github.com/Ricky1800/ledgerlite/tags)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+
 A fast, private, offline command-line tool that turns your bank and
 credit-card CSV exports into categorized books and a profit-and-loss
 report. Built for sole proprietors and small businesses who don't need
 (or can't justify the cost of) QuickBooks, but still want real books.
+
+![ledgerlite HTML profit & loss report](docs/images/report-top.png)
 
 **Data never leaves your machine.** ledgerlite reads CSV files you
 already downloaded and writes plain-text files back to a folder you
@@ -185,9 +191,21 @@ table and an "Expenses" table where every row has a small horizontal
 bar next to the amount sized to that category's share of the section
 total, a compact green/red bar chart of monthly income vs. expenses
 underneath, an optional Schedule C table, and a plain data table of any
-still-uncategorized transactions at the bottom. No images are checked
-into this repo (no build step, no assets, by design) — generate one
-yourself with the command above to see it.
+still-uncategorized transactions at the bottom. The tool itself ships
+with no build step and no bundled assets — see [Screenshots](#screenshots)
+below for real output, generated from the fixtures in `tests/fixtures/`.
+
+## Screenshots
+
+Generated with `ledgerlite report --format html --schedule-c`, from the
+CSV fixtures in `tests/fixtures/` imported across six bank/card profiles —
+real tool output, not a mockup:
+
+![Top of the P&L report: stat cards, income and expense tables with share bars](docs/images/report-top.png)
+
+**Schedule C rollup** (`--schedule-c`), further down the same report:
+
+![Schedule C rollup table](docs/images/report-schedule-c.png)
 
 ### 5. Export for your accountant
 

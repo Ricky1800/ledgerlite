@@ -89,15 +89,14 @@ Imported 1 new transaction(s) from 'tests/fixtures/chase_checking_overlap.csv' i
 ```console
 $ ledgerlite categorize
 2026-09-02 Chase Checking | ADOBE  *CREATIVE CLOUD | -54.99: Uncategorized -> Software
-2026-09-03 Chase Checking | STARBUCKS STORE #04521 | -6.25: Uncategorized -> Meals
 2026-09-03 Chase Checking | SHELL OIL 57443210 | -41.10: Uncategorized -> Fuel
+2026-09-03 Chase Checking | STARBUCKS STORE #04521 | -6.25: Uncategorized -> Meals
 2026-09-05 Chase Checking | DEPOSIT CUSTOMER INVOICE 1042 | 1250.00: Uncategorized -> Sales Income
 2026-09-07 Chase Checking | STAPLES STORE 0912 | -32.47: Uncategorized -> Supplies
 2026-09-10 Chase Checking | MONTHLY SERVICE FEE | -12.00: Uncategorized -> Bank Fees
 2026-09-12 Chase Checking | OWNER DRAW TRANSFER | -500.00: Uncategorized -> Owner Draw
-2026-09-14 Chase Checking | COSTCO WHOLESALE #221 | -215.33: Uncategorized -> Supplies
 
-8 change(s) applied.
+7 change(s) applied.
 ```
 
 Use `--dry-run` to preview changes without writing them. Rules are
@@ -112,33 +111,33 @@ overwrite an override.
 $ ledgerlite report --month 2026-09
 Profit & Loss — 2026-09 (2026-09-01 to 2026-09-30)
 
-+----------------+---------+
-| Category       | Amount  |
-+================+=========+
-| INCOME         |         |
-|----------------+---------|
-| Sales Income   | 1250.00 |
-|----------------+---------|
-| Total Income   | 1250.00 |
-|----------------+---------|
-| EXPENSES       |         |
-|----------------+---------|
-| Supplies       | 247.80  |
-|----------------+---------|
-| Owner Draw     | 500.00  |
-|----------------+---------|
-| Fuel           | 41.10   |
-|----------------+---------|
-| Software       | 54.99   |
-|----------------+---------|
-| Meals          | 6.25    |
-|----------------+---------|
-| Bank Fees      | 12.00   |
-|----------------+---------|
-| Total Expenses | 862.14  |
-|----------------+---------|
-| Net            | 387.86  |
-+----------------+---------+
+┌────────────────┬─────────┐
+│ Category       ┆ Amount  │
+╞════════════════╪═════════╡
+│ INCOME         ┆         │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ Sales Income   ┆ 1250.00 │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ Total Income   ┆ 1250.00 │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ EXPENSES       ┆         │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ Owner Draw     ┆ 500.00  │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ Software       ┆ 54.99   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ Fuel           ┆ 41.10   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ Supplies       ┆ 32.47   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ Bank Fees      ┆ 12.00   │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ Meals          ┆ 6.25    │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ Total Expenses ┆ 646.81  │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌┤
+│ Net            ┆ 603.19  │
+└────────────────┴─────────┘
 ```
 
 Add `--schedule-c` for an IRS Schedule C line rollup, and
@@ -150,7 +149,7 @@ nothing silently falls through the cracks.
 
 ```console
 $ ledgerlite export --format csv --output 2026-09-books.csv
-Exported 8 transaction(s) to '2026-09-books.csv'.
+Exported 7 transaction(s) to '2026-09-books.csv'.
 ```
 
 ## Commands

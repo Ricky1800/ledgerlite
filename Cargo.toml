@@ -7,6 +7,7 @@ description = "A fast, private, offline CLI that turns bank/credit-card CSV expo
 license = "MIT"
 authors = ["Ricky1800", "orbitwebsites-cloud"]
 repository = "https://github.com/Ricky1800/ledgerlite"
+homepage = "https://github.com/Ricky1800/ledgerlite"
 readme = "README.md"
 keywords = ["bookkeeping", "cli", "csv", "finance", "small-business"]
 categories = ["command-line-utilities", "finance"]

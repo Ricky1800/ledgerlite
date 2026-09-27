@@ -25,6 +25,12 @@ minutes, offline, for free, and your data stays on your laptop.
 ## Install
 
 ```sh
+cargo install ledgerlite   # (once published to crates.io)
+```
+
+Until then (or if you prefer installing straight from source):
+
+```sh
 cargo install --git https://github.com/Ricky1800/ledgerlite
 ```
 

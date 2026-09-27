@@ -229,6 +229,7 @@ pub fn cmd_report(
     to: Option<&str>,
     format_str: &str,
     schedule_c: bool,
+    out: Option<&Path>,
 ) -> Result<String> {
     let (_cfg, paths) = resolve_paths(dir)?;
     let range = daterange::resolve(month, year, from, to)?;
@@ -241,7 +242,14 @@ pub fn cmd_report(
         &range.label,
         schedule_c,
     );
-    Ok(report::render(&rep, format))
+    let rendered = report::render(&rep, format);
+
+    if let Some(path) = out {
+        export::write_to_file(path, &rendered)?;
+        Ok(format!("Wrote report to '{}'.", path.display()))
+    } else {
+        Ok(rendered)
+    }
 }
 
 /// `ledgerlite export`
@@ -307,8 +315,17 @@ mod tests {
         let categorize_msg = cmd_categorize(dir.path(), false).unwrap();
         assert!(categorize_msg.contains("Software"));
 
-        let report_text =
-            cmd_report(dir.path(), Some("2026-09"), None, None, None, "table", true).unwrap();
+        let report_text = cmd_report(
+            dir.path(),
+            Some("2026-09"),
+            None,
+            None,
+            None,
+            "table",
+            true,
+            None,
+        )
+        .unwrap();
         assert!(report_text.contains("Profit & Loss"));
         assert!(report_text.contains("Software"));
 

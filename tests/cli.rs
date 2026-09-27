@@ -400,6 +400,122 @@ fn generic_profile_imports_with_default_column_mapping() {
 }
 
 #[test]
+fn report_html_format_writes_a_report_file() {
+    let dir = init_project();
+    ledgerlite()
+        .current_dir(dir.path())
+        .args([
+            "import",
+            fixture("chase_checking_sample.csv").to_str().unwrap(),
+            "--account",
+            "Chase Checking",
+        ])
+        .assert()
+        .success();
+    ledgerlite()
+        .current_dir(dir.path())
+        .arg("categorize")
+        .assert()
+        .success();
+
+    let out_path = dir.path().join("report.html");
+    ledgerlite()
+        .current_dir(dir.path())
+        .args([
+            "report",
+            "--month",
+            "2026-09",
+            "--format",
+            "html",
+            "--schedule-c",
+            "--out",
+            out_path.to_str().unwrap(),
+        ])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Wrote report"));
+
+    let html = std::fs::read_to_string(&out_path).unwrap();
+    assert!(html.starts_with("<!DOCTYPE html>"));
+    assert!(html.contains("<title>Profit &amp; Loss"));
+    assert!(html.contains("summary-card"));
+    assert!(html.contains("category-table"));
+    assert!(html.contains("share-fill"));
+    assert!(html.contains("Software"));
+    assert!(html.contains("Schedule C rollup"));
+    assert!(html.contains("not tax advice") || html.contains("NOT tax advice"));
+}
+
+#[test]
+fn report_html_without_out_prints_to_stdout() {
+    let dir = init_project();
+    ledgerlite()
+        .current_dir(dir.path())
+        .args([
+            "import",
+            fixture("chase_checking_sample.csv").to_str().unwrap(),
+            "--account",
+            "Chase Checking",
+        ])
+        .assert()
+        .success();
+
+    ledgerlite()
+        .current_dir(dir.path())
+        .args(["report", "--month", "2026-09", "--format", "html"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("<!DOCTYPE html>"));
+}
+
+#[test]
+fn report_html_escapes_a_script_tag_in_a_transaction_description() {
+    let dir = init_project();
+    let csv_path = dir.path().join("evil.csv");
+    std::fs::write(
+        &csv_path,
+        "Date,Description,Amount\n\
+         2026-09-01,<script>alert(1)</script>,-25.00\n\
+         2026-09-02,CLIENT INVOICE PAYMENT,500.00\n",
+    )
+    .unwrap();
+
+    ledgerlite()
+        .current_dir(dir.path())
+        .args([
+            "import",
+            csv_path.to_str().unwrap(),
+            "--account",
+            "Chase Checking",
+            "--profile",
+            "generic",
+        ])
+        .assert()
+        .success();
+
+    let out_path = dir.path().join("report.html");
+    ledgerlite()
+        .current_dir(dir.path())
+        .args([
+            "report",
+            "--month",
+            "2026-09",
+            "--format",
+            "html",
+            "--out",
+            out_path.to_str().unwrap(),
+        ])
+        .assert()
+        .success();
+
+    let html = std::fs::read_to_string(&out_path).unwrap();
+    // The raw tag must never appear unescaped anywhere in the output...
+    assert!(!html.contains("<script>alert(1)</script>"));
+    // ...but its escaped form should, in the Uncategorized table.
+    assert!(html.contains("&lt;script&gt;alert(1)&lt;/script&gt;"));
+}
+
+#[test]
 fn export_writes_to_output_file() {
     let dir = init_project();
     ledgerlite()

@@ -29,6 +29,7 @@ fn main() -> ExitCode {
             to,
             format,
             schedule_c,
+            out,
         } => ledgerlite::cmd_report(
             &cwd,
             month.as_deref(),
@@ -37,6 +38,7 @@ fn main() -> ExitCode {
             to.as_deref(),
             &format,
             schedule_c,
+            out.as_deref(),
         ),
         Command::Export {
             format,

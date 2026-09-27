@@ -68,13 +68,18 @@ pub enum Command {
         #[arg(long)]
         to: Option<String>,
 
-        /// Output format: table, csv, json, or md
+        /// Output format: table, csv, json, md, or html
         #[arg(long, default_value = "table")]
         format: String,
 
         /// Also include an IRS Schedule C line rollup
         #[arg(long)]
         schedule_c: bool,
+
+        /// Write the report to this file instead of stdout (e.g. --format
+        /// html --out report.html)
+        #[arg(long)]
+        out: Option<PathBuf>,
     },
 
     /// Export transactions to CSV/JSON for an accountant

@@ -145,6 +145,44 @@ Add `--schedule-c` for an IRS Schedule C line rollup, and
 without a category shows up in its own "Uncategorized" section so
 nothing silently falls through the cracks.
 
+### 4b. Generate a printable HTML report
+
+```console
+$ ledgerlite report --year 2026 --format html --schedule-c --out report.html
+Wrote report to 'report.html'.
+```
+
+Produces a single, self-contained, accountant-ready HTML file (inline
+CSS, print stylesheet, no external assets or network calls) with:
+
+- A summary header: total income, total expenses, net, and the period.
+- Income/expense category tables, each row with a proportional **share
+  bar** so the biggest categories are visible at a glance, not just
+  readable as numbers.
+- A **monthly trend chart** (inline SVG, no JS) when the report spans
+  more than one month — income and expense bars per month.
+- The same **Uncategorized** review section as the other formats.
+- A **Schedule C rollup** table when `--schedule-c` is passed.
+
+Every piece of transaction-derived text (description, account name) is
+HTML-escaped before being written into the page, so a bank export
+containing `&`, `<`, `>`, or quote characters — accidentally or
+otherwise — can't break the page or inject markup.
+
+Open it in any browser, or print it (`Ctrl/Cmd+P`) straight to PDF for a
+client or accountant — the print stylesheet keeps tables from splitting
+awkwardly across pages.
+
+*What it looks like:* a serif, letter-styled page — four stat cards
+(Income / Expenses / Net / Period) across the top, then an "Income"
+table and an "Expenses" table where every row has a small horizontal
+bar next to the amount sized to that category's share of the section
+total, a compact green/red bar chart of monthly income vs. expenses
+underneath, an optional Schedule C table, and a plain data table of any
+still-uncategorized transactions at the bottom. No images are checked
+into this repo (no build step, no assets, by design) — generate one
+yourself with the command above to see it.
+
 ### 5. Export for your accountant
 
 ```console
@@ -159,7 +197,7 @@ Exported 7 transaction(s) to '2026-09-books.csv'.
 | `ledgerlite init [--force]` | Creates `ledgerlite.toml` and `rules.toml` |
 | `ledgerlite import <file> --account <name> [--profile <name>]` | Imports a CSV export |
 | `ledgerlite categorize [--dry-run]` | Applies rules + manual overrides |
-| `ledgerlite report [--month YYYY-MM \| --year YYYY \| --from YYYY-MM-DD --to YYYY-MM-DD] [--format table\|csv\|json\|md] [--schedule-c]` | P&L report |
+| `ledgerlite report [--month YYYY-MM \| --year YYYY \| --from YYYY-MM-DD --to YYYY-MM-DD] [--format table\|csv\|json\|md\|html] [--schedule-c] [--out <file>]` | P&L report (prints to stdout, or writes to `--out`) |
 | `ledgerlite export [--format csv\|json] [--output <file>] [--from ...] [--to ...]` | Dumps the ledger |
 
 Run `ledgerlite <command> --help` for full flag documentation.

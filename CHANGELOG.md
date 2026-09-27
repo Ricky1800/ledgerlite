@@ -5,6 +5,33 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-09-27
+
+### Added
+
+- `ledgerlite report --format html --out report.html`: a clean,
+  printable, accountant-ready P&L report — inline CSS and print
+  stylesheet, no external assets or network calls. Includes a summary
+  header (income/expenses/net/period), income/expense category tables
+  with proportional share bars, a monthly trend chart rendered as inline
+  SVG (shown whenever the report spans more than one calendar month), the
+  existing Uncategorized-review section, and the Schedule C rollup when
+  `--schedule-c` is passed.
+- `--out <file>` on `ledgerlite report` for every format (previously only
+  `export` supported writing to a file); omit it to print to stdout as
+  before.
+- `PnlReport` gained a `monthly: Vec<MonthlyTotal>` field (grouped by
+  calendar month, chronological order) — additive, so existing
+  `--format json/csv/md/table` output is unchanged aside from the new
+  field appearing in JSON.
+- All transaction-derived text in the HTML report (description, account
+  name, category, error text) is escaped via a small internal
+  `escape_html` helper; a dedicated test proves a `<script>` tag in a
+  transaction description is rendered as `&lt;script&gt;...&lt;/script&gt;`,
+  never as live markup.
+- Integration tests covering `--format html` end-to-end (writing to
+  `--out`, printing to stdout, and the escaping guarantee).
+
 ## [0.1.0] - 2026-09-26
 
 ### Added
@@ -39,4 +66,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI (GitHub Actions) running `cargo fmt --check`, `cargo clippy --
   -D warnings`, and `cargo test` on Ubuntu, Windows, and macOS.
 
+[0.2.0]: https://github.com/Ricky1800/ledgerlite/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Ricky1800/ledgerlite/releases/tag/v0.1.0

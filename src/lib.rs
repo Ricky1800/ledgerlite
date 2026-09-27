@@ -8,6 +8,7 @@
 //! ledgerlite is a bookkeeping tool. It is **not tax advice** — consult a
 //! qualified professional (CPA/EA) before making filing decisions.
 
+pub mod config;
 pub mod error;
 pub mod money;
 pub mod transaction;

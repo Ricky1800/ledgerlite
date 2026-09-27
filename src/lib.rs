@@ -12,4 +12,5 @@ pub mod config;
 pub mod error;
 pub mod money;
 pub mod profiles;
+pub mod rules;
 pub mod transaction;

@@ -9,6 +9,7 @@
 //! qualified professional (CPA/EA) before making filing decisions.
 
 pub mod config;
+pub mod dedupe;
 pub mod error;
 pub mod money;
 pub mod overrides;

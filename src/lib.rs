@@ -11,6 +11,7 @@
 pub mod config;
 pub mod dedupe;
 pub mod error;
+pub mod importer;
 pub mod money;
 pub mod overrides;
 pub mod profiles;

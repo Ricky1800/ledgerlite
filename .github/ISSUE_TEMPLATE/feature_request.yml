@@ -1,0 +1,37 @@
+name: Feature request
+description: Suggest an idea, a new bank profile, or a report improvement.
+title: "[feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        See `ROADMAP_ISSUES.md` in the repo root for the kind of scope
+        that's a good fit for ledgerlite. Large scope changes
+        (multi-currency, double-entry bookkeeping, a GUI, etc.) are
+        probably better discussed in a Discussion first.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What are you trying to do that ledgerlite doesn't support today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?

@@ -1,0 +1,73 @@
+name: Bug report
+description: Something didn't work the way it should.
+title: "[bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please **do not**
+        attach real financial data — a small, fake/anonymized CSV
+        snippet that reproduces the problem is the most helpful thing
+        you can include.
+
+  - type: input
+    id: version
+    attributes:
+      label: ledgerlite version
+      description: Output of `ledgerlite --version`
+      placeholder: ledgerlite 0.1.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: command
+    attributes:
+      label: Command you ran
+      description: The exact `ledgerlite` command and flags
+      render: shell
+      placeholder: ledgerlite import chase.csv --account "Chase Checking" --profile chase-checking
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Full error message/output, if any
+      render: shell
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction (fake data only)
+      description: |
+        A few rows of fake CSV data (and your ledgerlite.toml/rules.toml
+        if relevant) that reproduce the problem.
+      render: shell
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?

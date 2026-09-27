@@ -1,0 +1,14 @@
+/target
+**/*.rs.bk
+Cargo.lock.bak
+*.pdb
+
+# Local user data directories that ledgerlite may create at runtime
+/ledger-data/
+*.ledgerlite.local.toml
+
+# Editor / OS cruft
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

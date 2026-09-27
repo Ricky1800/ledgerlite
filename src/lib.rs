@@ -12,6 +12,7 @@ pub mod config;
 pub mod daterange;
 pub mod dedupe;
 pub mod error;
+pub mod export;
 pub mod importer;
 pub mod ledger;
 pub mod money;

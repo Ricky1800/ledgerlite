@@ -38,6 +38,9 @@ pub struct Transaction {
     /// re-importing an overlapping export reproduces the same
     /// occurrences and is therefore recognized as a duplicate.
     pub occurrence: u32,
+    /// Optional path to a receipt file (e.g. PDF or image) on disk.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub receipt_path: Option<std::path::PathBuf>,
 }
 
 /// Collapses internal whitespace and lowercases a description so that

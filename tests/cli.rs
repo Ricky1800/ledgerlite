@@ -594,3 +594,87 @@ fn manual_override_survives_categorize() {
     // Rules would have otherwise put this in Software — confirm it did not.
     assert!(!adobe_line.contains("\"Software\""));
 }
+
+#[test]
+fn attach_receipt_validates_and_links_file_to_transaction() {
+    let dir = init_project();
+    ledgerlite()
+        .current_dir(dir.path())
+        .args([
+            "import",
+            fixture("chase_checking_sample.csv").to_str().unwrap(),
+            "--account",
+            "Chase Checking",
+        ])
+        .assert()
+        .success();
+
+    let ledger_path = dir.path().join("data").join("ledger.jsonl");
+    let ledger_contents = std::fs::read_to_string(&ledger_path).unwrap();
+    let adobe_line = ledger_contents
+        .lines()
+        .find(|l| l.contains("ADOBE"))
+        .expect("adobe transaction present");
+    let adobe_id = adobe_line
+        .split("\"id\":\"")
+        .nth(1)
+        .unwrap()
+        .split('"')
+        .next()
+        .unwrap();
+
+    // 1. Validation failure: missing receipt file
+    let non_existent_receipt = dir.path().join("missing_receipt.pdf");
+    ledgerlite()
+        .current_dir(dir.path())
+        .args([
+            "attach-receipt",
+            adobe_id,
+            non_existent_receipt.to_str().unwrap(),
+        ])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("does not exist"));
+
+    // 2. Validation failure: missing transaction id
+    let real_receipt = dir.path().join("invoice_123.pdf");
+    std::fs::write(&real_receipt, b"%PDF-1.4 dummy receipt content").unwrap();
+
+    ledgerlite()
+        .current_dir(dir.path())
+        .args([
+            "attach-receipt",
+            "non-existent-transaction-id",
+            real_receipt.to_str().unwrap(),
+        ])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("not found"));
+
+    // 3. Success: attach receipt to transaction
+    ledgerlite()
+        .current_dir(dir.path())
+        .args(["attach-receipt", adobe_id, real_receipt.to_str().unwrap()])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Attached receipt"));
+
+    // 4. Verify in ledger data
+    let updated_ledger = std::fs::read_to_string(&ledger_path).unwrap();
+    let updated_adobe = updated_ledger
+        .lines()
+        .find(|l| l.contains("ADOBE"))
+        .unwrap();
+    assert!(updated_adobe.contains("invoice_123.pdf"));
+
+    // 5. Verify in export CSV
+    let export_res = ledgerlite()
+        .current_dir(dir.path())
+        .args(["export", "--format", "csv"])
+        .assert()
+        .success();
+
+    let csv_out = String::from_utf8(export_res.get_output().stdout.clone()).unwrap();
+    assert!(csv_out.contains("receipt_path"));
+    assert!(csv_out.contains("invoice_123.pdf"));
+}

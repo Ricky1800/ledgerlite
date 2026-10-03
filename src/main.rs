@@ -52,6 +52,10 @@ fn main() -> ExitCode {
             from.as_deref(),
             to.as_deref(),
         ),
+        Command::AttachReceipt {
+            transaction_id,
+            file,
+        } => ledgerlite::cmd_attach_receipt(&cwd, &transaction_id, &file),
     };
 
     match result {

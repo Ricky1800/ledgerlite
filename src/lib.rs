@@ -289,6 +289,39 @@ pub fn cmd_export(
     }
 }
 
+/// `ledgerlite attach-receipt <transaction-id> <file>`
+pub fn cmd_attach_receipt(dir: &Path, transaction_id: &str, file: &Path) -> Result<String> {
+    if !file.exists() {
+        return Err(LedgerError::ReceiptFileNotFound {
+            path: file.to_path_buf(),
+        });
+    }
+
+    let (_cfg, paths) = resolve_paths(dir)?;
+    let mut transactions = ledger::load(&paths.ledger)?;
+
+    let tx = transactions
+        .iter_mut()
+        .find(|t| t.id == transaction_id)
+        .ok_or_else(|| LedgerError::TransactionNotFound(transaction_id.to_string()))?;
+
+    tx.receipt_path = Some(file.to_path_buf());
+    let desc = tx.description.clone();
+    let date = tx.date;
+    let amount = tx.amount;
+
+    ledger::save(&paths.ledger, &transactions)?;
+
+    Ok(format!(
+        "Attached receipt '{}' to transaction '{}' ({}, {}, ${:.2}).\n",
+        file.display(),
+        transaction_id,
+        date,
+        desc,
+        amount
+    ))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

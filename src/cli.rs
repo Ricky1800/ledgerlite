@@ -100,4 +100,13 @@ pub enum Command {
         #[arg(long)]
         to: Option<String>,
     },
+
+    /// Attach a receipt file on disk to a specific transaction
+    AttachReceipt {
+        /// Transaction ID to attach the receipt to
+        transaction_id: String,
+
+        /// Path to the receipt file on disk
+        file: PathBuf,
+    },
 }

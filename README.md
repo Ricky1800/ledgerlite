@@ -43,6 +43,24 @@ cargo install --git https://github.com/Ricky1800/ledgerlite
 This requires a Rust toolchain (1.75+). If you don't have one:
 <https://rustup.rs>.
 
+### Shell completions
+
+Generate shell completion scripts with `ledgerlite completions <shell>`:
+
+```sh
+# Bash
+ledgerlite completions bash > ~/.local/share/bash-completion/completions/ledgerlite
+
+# Zsh
+ledgerlite completions zsh > ~/.zfunc/_ledgerlite
+
+# Fish
+ledgerlite completions fish > ~/.config/fish/completions/ledgerlite.fish
+
+# PowerShell
+ledgerlite completions powershell >> $PROFILE
+```
+
 ## 5-minute walkthrough
 
 This walkthrough uses the fake fixture data shipped in the repo under

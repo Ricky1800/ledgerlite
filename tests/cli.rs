@@ -591,6 +591,16 @@ fn manual_override_survives_categorize() {
     let updated = std::fs::read_to_string(&ledger_path).unwrap();
     let adobe_line = updated.lines().find(|l| l.contains("ADOBE")).unwrap();
     assert!(adobe_line.contains("\"Owner Draw\""));
-    // Rules would have otherwise put this in Software — confirm it did not.
-    assert!(!adobe_line.contains("\"Software\""));
+    // Rules would have otherwise put this in Software — confirm it did not.\n    assert!(!adobe_line.contains("\"Software\""));
+}
+
+#[test]
+fn completions_subcommand_outputs_script_for_each_shell() {
+    for shell in ["bash", "elvish", "fish", "powershell", "zsh"] {
+        ledgerlite()
+            .args(["completions", shell])
+            .assert()
+            .success()
+            .stdout(predicates::str::contains("ledgerlite"));
+    }
 }

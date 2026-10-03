@@ -24,6 +24,7 @@ rust_decimal = { version = "1", features = ["serde-with-str"] }
 anyhow = "1"
 thiserror = "1"
 comfy-table = "7"
+clap_complete = "4.5.67"
 
 [dev-dependencies]
 assert_cmd = "2"

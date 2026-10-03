@@ -100,4 +100,10 @@ pub enum Command {
         #[arg(long)]
         to: Option<String>,
     },
+
+    /// Generate shell completion script to stdout
+    Completions {
+        /// Shell to generate completions for (bash, elvish, fish, powershell, zsh)
+        shell: clap_complete::Shell,
+    },
 }

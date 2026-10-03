@@ -168,4 +168,7 @@ pub enum LedgerError {
         #[source]
         source: serde_json::Error,
     },
+
+    #[error("transaction id '{0}' was not found in the ledger")]
+    TransactionNotFound(String),
 }

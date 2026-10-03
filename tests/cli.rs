@@ -594,3 +594,66 @@ fn manual_override_survives_categorize() {
     // Rules would have otherwise put this in Software — confirm it did not.
     assert!(!adobe_line.contains("\"Software\""));
 }
+
+#[test]
+fn categorize_set_sets_override_and_survives_categorize() {
+    let dir = init_project();
+    ledgerlite()
+        .current_dir(dir.path())
+        .args([
+            "import",
+            fixture("chase_checking_sample.csv").to_str().unwrap(),
+            "--account",
+            "Chase Checking",
+        ])
+        .assert()
+        .success();
+
+    let ledger_path = dir.path().join("data").join("ledger.jsonl");
+    let ledger_contents = std::fs::read_to_string(&ledger_path).unwrap();
+    let adobe_line = ledger_contents
+        .lines()
+        .find(|l| l.contains("ADOBE"))
+        .expect("adobe transaction present");
+    let adobe_id = adobe_line
+        .split("\"id\":\"")
+        .nth(1)
+        .unwrap()
+        .split('"')
+        .next()
+        .unwrap();
+
+    // Verify error when transaction id does not exist
+    ledgerlite()
+        .current_dir(dir.path())
+        .args(["categorize", "--set", "non-existent-id", "Custom Category"])
+        .assert()
+        .failure()
+        .stderr(predicate::str::contains("transaction id 'non-existent-id' was not found"));
+
+    // Set category override via --set
+    ledgerlite()
+        .current_dir(dir.path())
+        .args(["categorize", "--set", adobe_id, "Design Equipment"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Set category override for transaction"));
+
+    // Verify overrides.toml was created/updated
+    let overrides_path = dir.path().join("overrides.toml");
+    let overrides_content = std::fs::read_to_string(&overrides_path).unwrap();
+    assert!(overrides_content.contains(adobe_id));
+    assert!(overrides_content.contains("Design Equipment"));
+
+    // Run categorize and verify override took effect
+    ledgerlite()
+        .current_dir(dir.path())
+        .arg("categorize")
+        .assert()
+        .success();
+
+    let updated = std::fs::read_to_string(&ledger_path).unwrap();
+    let adobe_line = updated.lines().find(|l| l.contains("ADOBE")).unwrap();
+    assert!(adobe_line.contains("\"Design Equipment\""));
+    assert!(!adobe_line.contains("\"Software\""));
+}

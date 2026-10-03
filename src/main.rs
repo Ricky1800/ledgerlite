@@ -21,7 +21,10 @@ fn main() -> ExitCode {
             account,
             profile,
         } => ledgerlite::cmd_import(&cwd, &file, &account, profile.as_deref()),
-        Command::Categorize { dry_run } => ledgerlite::cmd_categorize(&cwd, dry_run),
+        Command::Categorize { dry_run, set } => match set {
+            Some(args) => ledgerlite::cmd_categorize_set(&cwd, &args[0], &args[1]),
+            None => ledgerlite::cmd_categorize(&cwd, dry_run),
+        },
         Command::Report {
             month,
             year,

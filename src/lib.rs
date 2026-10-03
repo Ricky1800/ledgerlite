@@ -289,6 +289,19 @@ pub fn cmd_export(
     }
 }
 
+pub fn cmd_completions(shell: clap_complete::Shell) -> Result<String> {
+    use clap::CommandFactory;
+    let mut cmd = cli::Cli::command();
+    let mut buf = Vec::new();
+    clap_complete::generate(shell, &mut cmd, "ledgerlite", &mut buf);
+    match String::from_utf8(buf) {
+        Ok(s) => Ok(s),
+        Err(e) => Err(LedgerError::UnknownFormat(format!(
+            "failed to decode UTF-8 completion output: {e}"
+        ))),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

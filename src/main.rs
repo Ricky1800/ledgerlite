@@ -52,6 +52,7 @@ fn main() -> ExitCode {
             from.as_deref(),
             to.as_deref(),
         ),
+        Command::Completions { shell } => ledgerlite::cmd_completions(shell),
     };
 
     match result {

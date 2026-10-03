@@ -48,6 +48,10 @@ pub enum Command {
         /// Show what would change without writing anything
         #[arg(long)]
         dry_run: bool,
+
+        /// Manually assign a category override to a specific transaction: --set <id> <category>
+        #[arg(long, num_args = 2, value_names = ["ID", "CATEGORY"])]
+        set: Option<Vec<String>>,
     },
 
     /// Generate a profit & loss report

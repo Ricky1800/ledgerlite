@@ -219,6 +219,31 @@ pub fn cmd_categorize(dir: &Path, dry_run: bool) -> Result<String> {
     Ok(out)
 }
 
+/// `ledgerlite categorize --set <id> <category>`
+pub fn cmd_categorize_set(dir: &Path, transaction_id: &str, category: &str) -> Result<String> {
+    let (_cfg, paths) = resolve_paths(dir)?;
+    let transactions = ledger::load(&paths.ledger)?;
+
+    let target_tx = transactions
+        .iter()
+        .find(|tx| tx.id == transaction_id)
+        .ok_or_else(|| LedgerError::TransactionNotFound(transaction_id.to_string()))?;
+
+    let mut overrides = overrides::Overrides::load_or_default(&paths.overrides)?;
+    overrides.set(transaction_id, category);
+    overrides.save(&paths.overrides)?;
+
+    Ok(format!(
+        "Set category override for transaction '{}' ({}, {}, ${:.2}) to '{}'.\nSaved to '{}'.\n",
+        target_tx.id,
+        target_tx.date,
+        target_tx.description,
+        target_tx.amount,
+        category,
+        paths.overrides.display()
+    ))
+}
+
 /// `ledgerlite report`
 #[allow(clippy::too_many_arguments)]
 pub fn cmd_report(

@@ -221,6 +221,7 @@ Exported 7 transaction(s) to '2026-09-books.csv'.
 | `ledgerlite init [--force]` | Creates `ledgerlite.toml` and `rules.toml` |
 | `ledgerlite import <file> --account <name> [--profile <name>]` | Imports a CSV export |
 | `ledgerlite categorize [--dry-run]` | Applies rules + manual overrides |
+| `ledgerlite categorize --set <id> <category>` | Records a manual override for `<id>` in `overrides.toml` |
 | `ledgerlite report [--month YYYY-MM \| --year YYYY \| --from YYYY-MM-DD --to YYYY-MM-DD] [--format table\|csv\|json\|md\|html] [--schedule-c] [--out <file>]` | P&L report (prints to stdout, or writes to `--out`) |
 | `ledgerlite export [--format csv\|json] [--output <file>] [--from ...] [--to ...]` | Dumps the ledger |
 
@@ -293,8 +294,11 @@ schedule_c_line = "Line 27a - Other expenses (Software)"
 
 ## Manual overrides
 
-`overrides.toml` maps a transaction id (shown by `ledgerlite export`) to
-a category you chose by hand:
+`overrides.toml` maps a transaction id to a category you chose by hand. Instead of computing dedupe keys manually, use the `--set` helper:
+
+1. Discover the transaction id with `ledgerlite export --format csv` (or inspect `data/ledger.jsonl`).
+2. Run `ledgerlite categorize --set <transaction-id> "<Category>"`.
+3. The override is saved directly into `overrides.toml`. Future runs of `ledgerlite categorize` will apply this override automatically and will never replace it with rule matches.
 
 ```toml
 [overrides]

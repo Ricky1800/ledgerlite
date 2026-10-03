@@ -223,6 +223,7 @@ Exported 7 transaction(s) to '2026-09-books.csv'.
 | `ledgerlite categorize [--dry-run]` | Applies rules + manual overrides |
 | `ledgerlite report [--month YYYY-MM \| --year YYYY \| --from YYYY-MM-DD --to YYYY-MM-DD] [--format table\|csv\|json\|md\|html] [--schedule-c] [--out <file>]` | P&L report (prints to stdout, or writes to `--out`) |
 | `ledgerlite export [--format csv\|json] [--output <file>] [--from ...] [--to ...]` | Dumps the ledger |
+| `ledgerlite attach-receipt <transaction-id> <file>` | Links a receipt file on disk to a transaction |
 
 Run `ledgerlite <command> --help` for full flag documentation.
 
@@ -300,6 +301,16 @@ a category you chose by hand:
 [overrides]
 "2026-09-02|Chase Checking|-54.99|adobe *creative cloud|0" = "Software - Annual Plan"
 ```
+
+## Receipt linking
+
+Link a local receipt (PDF, image, invoice) to any transaction without copying or altering the file:
+
+```bash
+ledgerlite attach-receipt "<transaction-id>" receipts/adobe_2026_09.pdf
+```
+
+Receipt paths are recorded in `data/ledger.jsonl` and included in `ledgerlite export --format csv` / `json`.
 
 `ledgerlite categorize` always applies overrides first and never
 replaces what it finds there, no matter what the rules would otherwise

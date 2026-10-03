@@ -34,6 +34,7 @@ struct ExportRow<'a> {
     category: &'a str,
     schedule_c_line: &'a str,
     source_file: &'a str,
+    receipt_path: &'a str,
 }
 
 pub fn filter_range(
@@ -60,6 +61,11 @@ pub fn render_csv(transactions: &[&Transaction]) -> Result<String> {
             category: tx.category.as_deref().unwrap_or(""),
             schedule_c_line: tx.schedule_c_line.as_deref().unwrap_or(""),
             source_file: &tx.source_file,
+            receipt_path: tx
+                .receipt_path
+                .as_ref()
+                .and_then(|p| p.to_str())
+                .unwrap_or(""),
         };
         wtr.serialize(row).map_err(|source| LedgerError::Csv {
             path: "<export>".into(),
@@ -108,7 +114,30 @@ mod tests {
             schedule_c_line: None,
             source_file: "f.csv".into(),
             occurrence: 0,
+            receipt_path: None,
         }
+    }
+
+    #[test]
+    fn receipt_path_serialization_and_deserialization() {
+        let mut t = tx("2026-09-02", dec!(-54.99));
+        assert_eq!(t.receipt_path, None);
+
+        // Verify JSON round-trip without receipt_path (backwards compatible)
+        let json_without = serde_json::to_string(&t).unwrap();
+        assert!(!json_without.contains("receipt_path"));
+        let deserialized_without: Transaction = serde_json::from_str(&json_without).unwrap();
+        assert_eq!(deserialized_without.receipt_path, None);
+
+        // Verify JSON round-trip with receipt_path
+        t.receipt_path = Some(std::path::PathBuf::from("/path/to/receipt.pdf"));
+        let json_with = serde_json::to_string(&t).unwrap();
+        assert!(json_with.contains("receipt.pdf"));
+        let deserialized_with: Transaction = serde_json::from_str(&json_with).unwrap();
+        assert_eq!(
+            deserialized_with.receipt_path,
+            Some(std::path::PathBuf::from("/path/to/receipt.pdf"))
+        );
     }
 
     #[test]

@@ -85,16 +85,17 @@ mod tests {
 
     fn sample_tx(id: &str, date: NaiveDate) -> Transaction {
         Transaction {
-            id: id.to_string(),
+            id: id.into(),
             date,
             account: "Chase Checking".into(),
-            description: "Starbucks".into(),
-            raw_description: "STARBUCKS".into(),
+            description: "Coffee".into(),
+            raw_description: "Coffee".into(),
             amount: dec!(-4.50),
-            category: None,
+            category: Some("Meals".into()),
             schedule_c_line: None,
-            source_file: "a.csv".into(),
+            source_file: "test.csv".into(),
             occurrence: 0,
+            receipt_path: None,
         }
     }
 

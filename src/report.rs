@@ -730,16 +730,17 @@ mod tests {
 
     fn tx(date: &str, category: Option<&str>, amount: Decimal, sched: Option<&str>) -> Transaction {
         Transaction {
-            id: format!("{date}-{amount}"),
+            id: date.to_string(),
             date: NaiveDate::parse_from_str(date, "%Y-%m-%d").unwrap(),
             account: "Chase Checking".into(),
             description: "test".into(),
             raw_description: "test".into(),
             amount,
-            category: category.map(|c| c.to_string()),
+            category: category.map(|s| s.to_string()),
             schedule_c_line: sched.map(|s| s.to_string()),
             source_file: "f.csv".into(),
             occurrence: 0,
+            receipt_path: None,
         }
     }
 

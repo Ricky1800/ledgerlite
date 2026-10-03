@@ -109,6 +109,7 @@ mod tests {
                 schedule_c_line: None,
                 source_file: "a.csv".into(),
                 occurrence: 0,
+                receipt_path: None,
             },
             Transaction {
                 id: id2.clone(),
@@ -121,6 +122,7 @@ mod tests {
                 schedule_c_line: None,
                 source_file: "a.csv".into(),
                 occurrence: 1,
+                receipt_path: None,
             },
         ];
 

@@ -176,6 +176,7 @@ pub fn import_csv(
             schedule_c_line: None,
             source_file: source_file.clone(),
             occurrence,
+            receipt_path: None,
         });
     }
 

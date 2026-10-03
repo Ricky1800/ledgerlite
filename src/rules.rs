@@ -271,16 +271,17 @@ mod tests {
 
     fn tx(description: &str, amount: Decimal, account: &str) -> Transaction {
         Transaction {
-            id: "test-id".to_string(),
-            date: NaiveDate::from_ymd_opt(2026, 1, 1).unwrap(),
-            account: account.to_string(),
-            description: description.to_string(),
-            raw_description: description.to_string(),
+            id: "id".into(),
+            date: NaiveDate::from_ymd_opt(2026, 9, 2).unwrap(),
+            account: account.into(),
+            description: description.into(),
+            raw_description: description.into(),
             amount,
             category: None,
             schedule_c_line: None,
-            source_file: "test.csv".to_string(),
+            source_file: "test.csv".into(),
             occurrence: 0,
+            receipt_path: None,
         }
     }
 
